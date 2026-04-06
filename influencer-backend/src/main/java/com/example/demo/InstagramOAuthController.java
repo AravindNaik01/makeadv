@@ -23,16 +23,19 @@ public class InstagramOAuthController {
 
     @GetMapping("/auth/instagram/url")
     public ResponseEntity<?> instagramAuthUrl() {
+        if (!instagramOAuthService.isConfigured()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "instagram_oauth_not_configured",
+                    "hint", "Configure instagram.client-id and instagram.client-secret before using Instagram login."));
+        }
         String url = instagramOAuthService.buildAuthorizeUrl();
-        boolean dev = !instagramOAuthService.isConfigured();
-        return ResponseEntity.ok(dev
-                ? Map.of("url", url, "devMode", true)
-                : Map.of("url", url));
+        return ResponseEntity.ok(Map.of("url", url));
     }
 
     @GetMapping("/auth/instagram/dev-callback")
     public void instagramDevCallback(HttpServletResponse response) throws IOException {
-        response.sendRedirect(instagramOAuthService.finishDevOAuth());
+        response.sendRedirect(frontendUrl.replaceAll("/$", "") + "/oauth/instagram?error="
+                + java.net.URLEncoder.encode("dev_callback_not_allowed", java.nio.charset.StandardCharsets.UTF_8));
     }
 
     @GetMapping("/auth/instagram/callback")

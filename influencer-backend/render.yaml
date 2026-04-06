@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: influencer-backend
+    runtime: java
+    buildCommand: ./gradlew bootJar
+    startCommand: java -jar build/libs/*.jar
+    env:
+      - key: JAVA_OPTS
+        value: -Dserver.port=8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+    envs:
+      - key: DB_URL
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: INSTAGRAM_CLIENT_ID
+        sync: false
+      - key: INSTAGRAM_CLIENT_SECRET
+        sync: false
+      - key: INSTAGRAM_REDIRECT_URI
+        sync: false
+      - key: APP_FRONTEND_URL
+        sync: false
+      - key: APP_PUBLIC_BACKEND_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false

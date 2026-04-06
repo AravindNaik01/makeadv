@@ -80,35 +80,24 @@ public class InstagramOAuthService {
      * (no Meta app). Never empty — avoids 503 when credentials are unset.
      */
     public String buildAuthorizeUrl() {
-        if (isConfigured()) {
-            pruneStates();
-            String state = UUID.randomUUID().toString();
-            pendingStates.put(state, System.currentTimeMillis());
+        pruneStates();
+        String state = UUID.randomUUID().toString();
+        pendingStates.put(state, System.currentTimeMillis());
 
-            String q = "client_id=" + enc(clientId)
-                    + "&redirect_uri=" + enc(redirectUri)
-                    + "&scope=" + enc(scope)
-                    + "&response_type=code"
-                    + "&state=" + enc(state);
-            return authorizeUrl + "?" + q;
-        }
-        String base = publicBackendUrl.replaceAll("/$", "");
-        return base + "/auth/instagram/dev-callback";
+        String q = "client_id=" + enc(clientId)
+                + "&redirect_uri=" + enc(redirectUri)
+                + "&scope=" + enc(scope)
+                + "&response_type=code"
+                + "&state=" + enc(state);
+        return authorizeUrl + "?" + q;
     }
 
     /**
-     * Skip Instagram and issue JWT for the configured dev user. Only allowed when real OAuth is not configured.
+     * Dev callback is not allowed when using real Instagram OAuth.
      */
     public String finishDevOAuth() {
         String base = frontendUrl.replaceAll("/$", "") + "/oauth/instagram";
-        if (isConfigured()) {
-            return base + "?error=" + encQ("dev_callback_not_allowed_when_instagram_is_configured");
-        }
-        String jwt = authService.provisionOrLoginInfluencerFromInstagram(devInstagramId, devInstagramUsername);
-        if (jwt == null) {
-            return base + "?error=" + encQ("provision_failed");
-        }
-        return base + "?token=" + encQ(jwt);
+        return base + "?error=" + encQ("dev_callback_not_allowed");
     }
 
     public String finishOAuth(String code, String state) {

@@ -349,10 +349,8 @@ function App() {
                 Continue with Instagram
               </button>
               <p className="muted igFinePrint">
-                Local dev: leave <code>instagram.client-id</code> and{" "}
-                <code>instagram.client-secret</code> empty — the backend signs you in as the test
-                influencer. For real Instagram, set those keys from your Meta app and use{" "}
-                <code>app.public-backend-url</code> so the redirect matches your API.
+                Sign in with your Instagram account. Make sure the backend is configured with a valid
+                Instagram app client ID and secret so the login happens through Instagram OAuth.
               </p>
             </div>
           ) : (
