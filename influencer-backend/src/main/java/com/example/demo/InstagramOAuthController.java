@@ -24,17 +24,15 @@ public class InstagramOAuthController {
     @GetMapping("/auth/instagram/url")
     public ResponseEntity<?> instagramAuthUrl() {
         String url = instagramOAuthService.buildAuthorizeUrl();
-        boolean devMode = !instagramOAuthService.isConfigured();
-        return ResponseEntity.ok(devMode
-                ? Map.of("url", "/mock-instagram-login", "devMode", true)
+        boolean dev = !instagramOAuthService.isConfigured();
+        return ResponseEntity.ok(dev
+                ? Map.of("url", url, "devMode", true)
                 : Map.of("url", url));
     }
 
     @GetMapping("/auth/instagram/dev-callback")
-    public void instagramDevCallback(
-            @RequestParam(required = false) String username,
-            HttpServletResponse response) throws IOException {
-        response.sendRedirect(instagramOAuthService.finishDevOAuth(username));
+    public void instagramDevCallback(HttpServletResponse response) throws IOException {
+        response.sendRedirect(instagramOAuthService.finishDevOAuth());
     }
 
     @GetMapping("/auth/instagram/callback")

@@ -53,8 +53,15 @@ public class InstagramOAuthService {
     @Value("${app.frontend-url:http://localhost:3000}")
     private String frontendUrl;
 
+    /** Public URL of this API (browser must open this for OAuth / dev callback). */
     @Value("${app.public-backend-url:http://localhost:8080}")
     private String publicBackendUrl;
+
+    @Value("${instagram.dev-instagram-id:dev_ig_user_001}")
+    private String devInstagramId;
+
+    @Value("${instagram.dev-username:dev_influencer}")
+    private String devInstagramUsername;
 
     @Autowired
     private AuthService authService;
@@ -69,28 +76,35 @@ public class InstagramOAuthService {
     }
 
     /**
-     * Browser redirect URL: real Instagram OAuth URL
+     * Browser redirect URL: real Instagram when client-id/secret are set; otherwise local dev mock
+     * (no Meta app). Never empty — avoids 503 when credentials are unset.
      */
     public String buildAuthorizeUrl() {
-        pruneStates();
-        String state = UUID.randomUUID().toString();
-        pendingStates.put(state, System.currentTimeMillis());
+        if (isConfigured()) {
+            pruneStates();
+            String state = UUID.randomUUID().toString();
+            pendingStates.put(state, System.currentTimeMillis());
 
-        String q = "client_id=" + enc(clientId)
-                + "&redirect_uri=" + enc(redirectUri)
-                + "&scope=" + enc(scope)
-                + "&response_type=code"
-                + "&state=" + enc(state);
-        return authorizeUrl + "?" + q;
+            String q = "client_id=" + enc(clientId)
+                    + "&redirect_uri=" + enc(redirectUri)
+                    + "&scope=" + enc(scope)
+                    + "&response_type=code"
+                    + "&state=" + enc(state);
+            return authorizeUrl + "?" + q;
+        }
+        String base = publicBackendUrl.replaceAll("/$", "");
+        return base + "/auth/instagram/dev-callback";
     }
 
-    public String finishDevOAuth(String username) {
+    /**
+     * Skip Instagram and issue JWT for the configured dev user. Only allowed when real OAuth is not configured.
+     */
+    public String finishDevOAuth() {
         String base = frontendUrl.replaceAll("/$", "") + "/oauth/instagram";
         if (isConfigured()) {
             return base + "?error=" + encQ("dev_callback_not_allowed_when_instagram_is_configured");
         }
-        String handle = (username != null && !username.isBlank()) ? username.trim() : "mock_influencer";
-        String jwt = authService.provisionOrLoginInfluencerFromInstagram("mock_" + handle, handle, "CREATOR", 50, true, 5);
+        String jwt = authService.provisionOrLoginInfluencerFromInstagram(devInstagramId, devInstagramUsername);
         if (jwt == null) {
             return base + "?error=" + encQ("provision_failed");
         }
@@ -136,7 +150,7 @@ public class InstagramOAuthService {
             }
             String accessToken = tokenJson.get("access_token").asText();
 
-            String meUrl = graphMeUrl + "?fields=id,username,account_type,media_count&access_token=" + enc(accessToken);
+            String meUrl = graphMeUrl + "?fields=id,username&access_token=" + enc(accessToken);
             HttpRequest meReq = HttpRequest.newBuilder()
                     .uri(URI.create(meUrl))
                     .timeout(Duration.ofSeconds(30))
@@ -153,32 +167,8 @@ public class InstagramOAuthService {
             }
             String igId = me.hasNonNull("id") ? me.get("id").asText() : null;
             String igUser = me.hasNonNull("username") ? me.get("username").asText() : null;
-            String accountType = me.hasNonNull("account_type") ? me.get("account_type").asText() : "UNKNOWN";
-            int mediaCount = me.hasNonNull("media_count") ? me.get("media_count").asInt() : 0;
 
-            String mediaUrl = graphMeUrl + "/media?fields=id,timestamp&limit=5&access_token=" + enc(accessToken);
-            HttpRequest mediaReq = HttpRequest.newBuilder()
-                    .uri(URI.create(mediaUrl))
-                    .timeout(Duration.ofSeconds(30))
-                    .GET()
-                    .build();
-            HttpResponse<String> mediaRes = httpClient.send(mediaReq, HttpResponse.BodyHandlers.ofString());
-            
-            boolean isActive = false;
-            int recentPosts = 0;
-            if (mediaRes.statusCode() / 100 == 2) {
-                JsonNode mediaJson = objectMapper.readTree(mediaRes.body());
-                if (mediaJson.hasNonNull("data")) {
-                    for (JsonNode item : mediaJson.get("data")) {
-                        recentPosts++;
-                        if (item.hasNonNull("timestamp")) {
-                            isActive = true; 
-                        }
-                    }
-                }
-            }
-
-            String jwt = authService.provisionOrLoginInfluencerFromInstagram(igId, igUser, accountType, mediaCount, isActive, recentPosts);
+            String jwt = authService.provisionOrLoginInfluencerFromInstagram(igId, igUser);
             if (jwt == null) {
                 return base + "?error=" + encQ("username_conflict_or_invalid_account");
             }

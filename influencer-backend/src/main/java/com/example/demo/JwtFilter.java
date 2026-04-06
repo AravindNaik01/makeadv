@@ -12,10 +12,7 @@ public class JwtFilter implements Filter {
 
 	private static final Set<String> ALLOWED_ORIGINS = Set.of(
 			"http://localhost:3000",
-			"http://127.0.0.1:3000",
-			"http://localhost:3001",
-			"http://127.0.0.1:3001",
-			"https://makeadv.vercel.app"
+			"http://127.0.0.1:3000"
 	);
 
 	@Override

@@ -41,7 +41,7 @@ public class AuthService {
     /**
      * Create or refresh influencer user + profile after Instagram OAuth.
      */
-    public String provisionOrLoginInfluencerFromInstagram(String instagramUserId, String instagramUsername, String accountType, int mediaCount, boolean isActive, int recentPosts) {
+    public String provisionOrLoginInfluencerFromInstagram(String instagramUserId, String instagramUsername) {
         if (instagramUserId == null || instagramUserId.isBlank()) {
             return null;
         }
@@ -70,17 +70,6 @@ public class AuthService {
                             influencerRepo.save(inf);
                         });
             }
-            
-            final String currentHandle = u.getUsername();
-            influencerRepo.findAll().stream()
-                    .filter(i -> currentHandle.equalsIgnoreCase(i.getUsername()))
-                    .findFirst()
-                    .ifPresent(inf -> {
-                        inf.setPosts(mediaCount);
-                        inf.setTrustScore(calculateTrust(accountType, mediaCount, isActive, recentPosts, inf));
-                        influencerRepo.save(inf);
-                    });
-
             return JwtUtil.generateToken(u.getUsername());
         }
 
@@ -94,11 +83,11 @@ public class AuthService {
         user.setPassword("OAUTH_IG_" + UUID.randomUUID());
         user.setRole("INFLUENCER");
         repo.save(user);
-        createInfluencerProfile(handle, accountType, mediaCount, isActive, recentPosts);
+        createInfluencerProfile(handle);
         return JwtUtil.generateToken(handle);
     }
 
-    private void createInfluencerProfile(String username, String accountType, int mediaCount, boolean isActive, int recentPosts) {
+    private void createInfluencerProfile(String username) {
         Influencer inf = influencerRepo.findAll().stream()
                 .filter(i -> username.equalsIgnoreCase(i.getUsername()))
                 .findFirst()
@@ -113,51 +102,22 @@ public class AuthService {
         inf.setLocation("Unknown");
         inf.setFollowers(0);
         inf.setFollowing(0);
-        inf.setPosts(mediaCount);
+        inf.setPosts(0);
         inf.setLikes(0);
         inf.setComments(0);
-        inf.setTrustScore(calculateTrust(accountType, mediaCount, isActive, recentPosts, inf));
+        inf.setTrustScore(calculateInitialTrust(inf));
         influencerRepo.save(inf);
     }
 
-    private int calculateTrust(String accountType, int mediaCount, boolean isActive, int recentPosts, Influencer inf) {
-        int score = 50; 
-        
-        // Boost for account type
-        if ("BUSINESS".equalsIgnoreCase(accountType) || "CREATOR".equalsIgnoreCase(accountType)) {
-            score += 20;
-        }
-        
-        // Boost for having media
-        if (mediaCount > 50) {
-            score += 15;
-        } else if (mediaCount > 10) {
-            score += 10;
-        } else if (mediaCount == 0) {
-            score -= 20; // potential fake or inactive
-        }
-        
-        // Boost for recent activity
-        if (isActive && recentPosts > 0) {
-            score += 15;
-        } else {
-            score -= 10; 
-        }
-
-        if (score > 100) score = 100;
-        if (score < 0) score = 0;
-        
-        return score;
+    private int calculateInitialTrust(Influencer inf) {
+        // keep it simple + consistent with your existing scoring logic baseline
+        return 50;
     }
 
-    // LOGIN (business only — influencers use Instagram OAuth)
+    // LOGIN (business / legacy only — influencers use Instagram OAuth)
     public String login(User user) {
 
         User existing = repo.findByUsername(user.getUsername());
-
-        if (existing != null && "INFLUENCER".equalsIgnoreCase(existing.getRole())) {
-            return "Influencers must login using Instagram";
-        }
 
         if (existing != null
                 && existing.getInstagramUserId() != null

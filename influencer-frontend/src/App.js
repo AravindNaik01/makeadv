@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 
-const API_BASE = process.env.REACT_APP_API_BASE || "http://127.0.0.1:8080";
+const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:8080";
 
 function OAuthInstagramCallback({ setToken, navigate }) {
   const [searchParams] = useSearchParams();
@@ -337,19 +337,22 @@ function App() {
           </h2>
           <p className="muted authHint">
             {influencerOnlyAuth
-              ? "You must authenticate securely with an actual Instagram account."
+              ? "With Meta credentials, you sign in on Instagram. In local dev, the backend can use a test account instead (no Meta app needed)."
               : !isRegisterPath
                 ? `Logging in as ${loginAs.toLowerCase()}.`
                 : `Registering as ${role.toLowerCase()}.`}
           </p>
+
           {influencerOnlyAuth ? (
             <div className="igAuthBlock">
               <button type="button" className="igButton" onClick={startInstagramSignIn}>
                 Continue with Instagram
               </button>
               <p className="muted igFinePrint">
-                Ensure your <code>instagram.client-id</code> and{" "}
-                <code>instagram.client-secret</code> are properly configured in <code>application.properties</code> for the OAuth redirect to work correctly.
+                Local dev: leave <code>instagram.client-id</code> and{" "}
+                <code>instagram.client-secret</code> empty — the backend signs you in as the test
+                influencer. For real Instagram, set those keys from your Meta app and use{" "}
+                <code>app.public-backend-url</code> so the redirect matches your API.
               </p>
             </div>
           ) : (
