@@ -35,25 +35,25 @@ In Render dashboard, go to your service's "Environment" tab and add:
 DB_URL=your_mysql_connection_url
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
-INSTAGRAM_CLIENT_ID=your_instagram_app_id
-INSTAGRAM_CLIENT_SECRET=your_instagram_app_secret
-INSTAGRAM_REDIRECT_URI=https://your-backend-domain.onrender.com/auth/instagram/callback
-APP_FRONTEND_URL=https://your-frontend-domain.vercel.app
-ALLOWED_ORIGINS=https://your-frontend-domain.vercel.app
-APP_PUBLIC_BACKEND_URL=https://your-backend-domain.onrender.com
+INSTAGRAM_CLIENT_ID=1961035025291179
+INSTAGRAM_CLIENT_SECRET=b1f57330bfa22817c04220ee42597d3d
+INSTAGRAM_REDIRECT_URI=https://makeadv.onrender.com/auth/instagram/callback
+APP_FRONTEND_URL=https://makeadv.vercel.app
+ALLOWED_ORIGINS=https://makeadv.vercel.app
+APP_PUBLIC_BACKEND_URL=https://makeadv.onrender.com
 SPRING_PROFILES_ACTIVE=prod
 JPA_SHOW_SQL=false
 ```
 
-Replace placeholders with your actual values.
+Update `APP_FRONTEND_URL` and `ALLOWED_ORIGINS` once you know your final Vercel domain.
 
 ### 4. Update Instagram Meta App
 
 In your Meta Developer dashboard:
 1. Go to your Instagram app settings
-2. Add this redirect URI to "Valid OAuth Redirect URIs":
+2. Add/update this redirect URI in "Valid OAuth Redirect URIs":
    ```
-   https://your-backend-domain.onrender.com/auth/instagram/callback
+   https://makeadv.onrender.com/auth/instagram/callback
    ```
 
 ## Frontend Deployment (Vercel)
@@ -64,14 +64,17 @@ In your Meta Developer dashboard:
 2. Click "Add New" > "Project"
 3. Import your GitHub repository
 4. Select the `influencer-frontend` directory as the root
+5. Click Deploy
 
 ### 2. Add Environment Variables to Vercel
 
 In Vercel project settings, go to "Environment Variables" and add:
 
 ```
-REACT_APP_API_BASE=https://your-backend-domain.onrender.com
+REACT_APP_API_BASE=https://makeadv.onrender.com
 ```
+
+Your frontend is now deployed at: `https://makeadv.vercel.app`
 
 ### 3. Deploy
 
