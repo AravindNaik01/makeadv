@@ -898,6 +898,30 @@ body {
   white-space: nowrap
 }
 
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 199;
+}
+
+.menu-toggle-btn {
+  display: none;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
 .nbadge-yellow {
   background: rgba(245, 158, 11, .18);
   color: var(--yellow);
@@ -1493,13 +1517,81 @@ body {
 }
 
 @media(max-width:600px) {
+  .menu-toggle-btn {
+    display: block;
+  }
+
+  .sidebar-overlay.open {
+    display: block;
+  }
+
   .dash-side {
-    display: none
+    width: 260px;
+    height: 100vh;
+    top: 0;
+    bottom: auto;
+    left: 0;
+    flex-direction: column;
+    padding: 24px 12px;
+    border-right: 1px solid var(--border);
+    border-top: none;
+    background: rgba(10, 10, 20, 0.98);
+    backdrop-filter: blur(20px);
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .dash-side.open {
+    transform: translateX(0);
+  }
+
+  .dash-logo, .dash-side-foot {
+    display: flex;
+  }
+
+  .dash-nav {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    padding: 0;
+    gap: 4px;
+  }
+
+  .dash-nav-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 11px 14px;
+    flex: none;
+    text-align: left;
+    border-radius: 10px;
+  }
+
+  .dash-nav-item.active {
+    background: rgba(124, 58, 237, .14);
+    border: 1px solid rgba(124, 58, 237, .22);
+    color: var(--purple2);
+  }
+
+  .dash-nav-item > span:first-child {
+    font-size: 1em;
+  }
+
+  .dash-nav-label {
+    font-size: 0.875rem;
+    flex: 1;
+  }
+
+  .dash-nav-badges {
+    position: static;
+    transform: none;
   }
 
   .dash-main {
     margin-left: 0;
-    padding: 20px 16px
+    padding: 20px 16px;
   }
 
   .hero-title {

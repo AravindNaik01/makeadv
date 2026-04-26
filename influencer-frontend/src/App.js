@@ -483,7 +483,20 @@ function ChatPanel({ connectionId, myUsername, otherUsername, token, onClose }) 
   const formatTime = (ts) => {
     if (!ts) return "";
     try {
-      const d = new Date(ts);
+      let d;
+      if (Array.isArray(ts)) {
+        // [year, month(1-indexed), day, hour, minute, second]
+        // Treat it as UTC since Render backend is in UTC
+        d = new Date(Date.UTC(ts[0], ts[1] - 1, ts[2] || 1, ts[3] || 0, ts[4] || 0, ts[5] || 0));
+      } else {
+        let timeStr = typeof ts === "string" ? ts : String(ts);
+        // If it looks like a local ISO string without timezone, append Z to force UTC
+        if (timeStr && !timeStr.endsWith("Z") && !timeStr.includes("+") && timeStr.includes("T")) {
+          timeStr += "Z";
+        }
+        d = new Date(timeStr);
+      }
+      if (isNaN(d.getTime())) return "";
       return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     } catch {
       return "";
@@ -621,6 +634,7 @@ function ChatPanel({ connectionId, myUsername, otherUsername, token, onClose }) 
 ───────────────────────────────────────────── */
 function BusinessDash({ authed, onLogout, token, myUsername }) {
   const [tab, setTab] = useState("browse"); // "browse" | "requests" | "profile" | "chat"
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // ── Chat state ────────────────────────────────────────────────────
   const [chatConn, setChatConn] = useState(null); // { id, otherUsername }
@@ -795,13 +809,14 @@ function BusinessDash({ authed, onLogout, token, myUsername }) {
   return (
     <div className="dash">
       <div className="orb orb-1" />
-      <aside className="dash-side">
+      <div className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`} onClick={() => setSidebarOpen(false)} />
+      <aside className={`dash-side ${sidebarOpen ? "open" : ""}`}>
         <div className="dash-logo"><span className="logo-icon">⚡</span> MakeAdv</div>
         <nav className="dash-nav">
-          <div className={`dash-nav-item ${tab === "browse" ? "active" : ""}`} onClick={() => setTab("browse")}>
+          <div className={`dash-nav-item ${tab === "browse" ? "active" : ""}`} onClick={() => { setTab("browse"); setSidebarOpen(false); }}>
             <span>🔍</span><span className="dash-nav-label">Browse Influencers</span>
           </div>
-          <div className={`dash-nav-item ${tab === "requests" ? "active" : ""}`} onClick={() => setTab("requests")}>
+          <div className={`dash-nav-item ${tab === "requests" ? "active" : ""}`} onClick={() => { setTab("requests"); setSidebarOpen(false); }}>
             <span>📤</span><span className="dash-nav-label">My Requests</span>
             <span className="dash-nav-badges">
               {sentReqs.filter(r => r.status === "PENDING").length > 0 && (
@@ -812,7 +827,7 @@ function BusinessDash({ authed, onLogout, token, myUsername }) {
               )}
             </span>
           </div>
-          <div className={`dash-nav-item ${tab === "profile" ? "active" : ""}`} onClick={() => setTab("profile")}>
+          <div className={`dash-nav-item ${tab === "profile" ? "active" : ""}`} onClick={() => { setTab("profile"); setSidebarOpen(false); }}>
             <span>👤</span><span className="dash-nav-label">My Profile</span>
           </div>
           <div className="dash-nav-item" onClick={onLogout}>🚪 Logout</div>
@@ -825,9 +840,12 @@ function BusinessDash({ authed, onLogout, token, myUsername }) {
         {tab === "browse" && (
           <>
             <div className="dash-topbar">
-              <div>
-                <h1 className="dash-heading">Browse Influencers</h1>
-                <p className="dash-sub">Find and connect with verified creators for your campaigns.</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <button className="menu-toggle-btn" onClick={() => setSidebarOpen(true)}>☰</button>
+                <div>
+                  <h1 className="dash-heading">Browse Influencers</h1>
+                  <p className="dash-sub">Find and connect with verified creators for your campaigns.</p>
+                </div>
               </div>
               <div className="dash-topbar-actions">
                 <NotificationCenter
@@ -889,9 +907,12 @@ function BusinessDash({ authed, onLogout, token, myUsername }) {
         {tab === "requests" && (
           <>
             <div className="dash-topbar">
-              <div>
-                <h1 className="dash-heading">My Requests</h1>
-                <p className="dash-sub">Track the status of collaboration requests you've sent to influencers.</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <button className="menu-toggle-btn" onClick={() => setSidebarOpen(true)}>☰</button>
+                <div>
+                  <h1 className="dash-heading">My Requests</h1>
+                  <p className="dash-sub">Track the status of collaboration requests you've sent to influencers.</p>
+                </div>
               </div>
               <div className="dash-topbar-actions">
                 <NotificationCenter
@@ -971,9 +992,12 @@ function BusinessDash({ authed, onLogout, token, myUsername }) {
         {tab === "profile" && (
           <>
             <div className="dash-topbar">
-              <div>
-                <h1 className="dash-heading">My Profile</h1>
-                <p className="dash-sub">Update your business details.</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <button className="menu-toggle-btn" onClick={() => setSidebarOpen(true)}>☰</button>
+                <div>
+                  <h1 className="dash-heading">My Profile</h1>
+                  <p className="dash-sub">Update your business details.</p>
+                </div>
               </div>
               <div className="dash-topbar-actions">
                 <NotificationCenter
@@ -1028,6 +1052,7 @@ function BusinessDash({ authed, onLogout, token, myUsername }) {
 ───────────────────────────────────────────── */
 function InfluencerDash({ authed, onLogout, token, myUsername }) {
   const [tab, setTab] = useState("requests");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -1204,10 +1229,11 @@ function InfluencerDash({ authed, onLogout, token, myUsername }) {
   return (
     <div className="dash">
       <div className="orb orb-1" />
-      <aside className="dash-side">
+      <div className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`} onClick={() => setSidebarOpen(false)} />
+      <aside className={`dash-side ${sidebarOpen ? "open" : ""}`}>
         <div className="dash-logo"><span className="logo-icon">⚡</span> MakeAdv</div>
         <nav className="dash-nav">
-          <div className={`dash-nav-item ${tab === "requests" ? "active" : ""}`} onClick={() => setTab("requests")}>
+          <div className={`dash-nav-item ${tab === "requests" ? "active" : ""}`} onClick={() => { setTab("requests"); setSidebarOpen(false); }}>
             <span>📬</span><span className="dash-nav-label">Brand Requests</span>
             <span className="dash-nav-badges">
               {requests.filter(r => r.status === "PENDING").length > 0 && (
@@ -1215,7 +1241,7 @@ function InfluencerDash({ authed, onLogout, token, myUsername }) {
               )}
             </span>
           </div>
-          <div className={`dash-nav-item ${tab === "profile" ? "active" : ""}`} onClick={() => setTab("profile")}>
+          <div className={`dash-nav-item ${tab === "profile" ? "active" : ""}`} onClick={() => { setTab("profile"); setSidebarOpen(false); }}>
             <span>👤</span><span className="dash-nav-label">My Profile</span>
           </div>
           <div className="dash-nav-item" onClick={onLogout}>🚪 Logout</div>
@@ -1227,9 +1253,12 @@ function InfluencerDash({ authed, onLogout, token, myUsername }) {
         {tab === "requests" && (
           <>
             <div className="dash-topbar">
-              <div>
-                <h1 className="dash-heading">Brand Requests</h1>
-                <p className="dash-sub">Review and respond to collaboration requests from businesses.</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <button className="menu-toggle-btn" onClick={() => setSidebarOpen(true)}>☰</button>
+                <div>
+                  <h1 className="dash-heading">Brand Requests</h1>
+                  <p className="dash-sub">Review and respond to collaboration requests from businesses.</p>
+                </div>
               </div>
               <div className="dash-topbar-actions">
                 <NotificationCenter
@@ -1327,9 +1356,12 @@ function InfluencerDash({ authed, onLogout, token, myUsername }) {
         {tab === "profile" && (
           <>
             <div className="dash-topbar">
-              <div>
-                <h1 className="dash-heading">My Profile</h1>
-                <p className="dash-sub">Update your metrics to improve your trust score.</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <button className="menu-toggle-btn" onClick={() => setSidebarOpen(true)}>☰</button>
+                <div>
+                  <h1 className="dash-heading">My Profile</h1>
+                  <p className="dash-sub">Update your metrics to improve your trust score.</p>
+                </div>
               </div>
               <div className="dash-topbar-actions">
                 <NotificationCenter
