@@ -15,9 +15,11 @@ import java.util.List;
 public class InfluencerService {
 
     private final InfluencerDao influencerDao;
+    private final InstagramDataService instagramDataService;
 
-    public InfluencerService(InfluencerDao influencerDao) {
+    public InfluencerService(InfluencerDao influencerDao, InstagramDataService instagramDataService) {
         this.influencerDao = influencerDao;
+        this.instagramDataService = instagramDataService;
     }
 
     // ── CRUD ─────────────────────────────────────────────────────────────────
@@ -101,11 +103,36 @@ public class InfluencerService {
         current.setName(updated.getName());
         current.setCategory(updated.getCategory());
         current.setLocation(updated.getLocation());
-        current.setFollowers(updated.getFollowers());
-        current.setFollowing(updated.getFollowing());
-        current.setPosts(updated.getPosts());
-        current.setLikes(updated.getLikes());
-        current.setComments(updated.getComments());
+        
+        current.setInstagramUrl(updated.getInstagramUrl());
+        
+        // Automatically fetch stats if an Instagram URL is provided
+        if (updated.getInstagramUrl() != null && !updated.getInstagramUrl().trim().isEmpty()) {
+            com.example.demo.dto.InstagramProfileDto data = instagramDataService.fetchProfileData(updated.getInstagramUrl());
+            if (data != null) {
+                current.setFollowers(data.getFollowers());
+                current.setFollowing(data.getFollowing());
+                current.setPosts(data.getPosts());
+                current.setLikes(data.getAvgLikes());
+                current.setComments(data.getAvgComments());
+                current.setInstagramVerified(data.isVerified());
+            } else {
+                current.setFollowers(updated.getFollowers());
+                current.setFollowing(updated.getFollowing());
+                current.setPosts(updated.getPosts());
+                current.setLikes(updated.getLikes());
+                current.setComments(updated.getComments());
+                current.setInstagramVerified(false);
+            }
+        } else {
+            current.setFollowers(updated.getFollowers());
+            current.setFollowing(updated.getFollowing());
+            current.setPosts(updated.getPosts());
+            current.setLikes(updated.getLikes());
+            current.setComments(updated.getComments());
+            current.setInstagramVerified(false);
+        }
+
         current.setTrustScore(calculateTrustScore(current));
         return influencerDao.save(current);
     }

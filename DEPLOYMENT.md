@@ -35,14 +35,17 @@ In Render dashboard, go to your service's "Environment" tab and add:
 DB_URL=your_mysql_connection_url
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
-INSTAGRAM_CLIENT_ID=1961035025291179
-INSTAGRAM_CLIENT_SECRET=b1f57330bfa22817c04220ee42597d3d
+JWT_SECRET=replace_with_a_long_random_secret_at_least_32_chars
+RAPIDAPI_INSTAGRAM_KEY=your_rapidapi_key
+INSTAGRAM_CLIENT_ID=your_instagram_client_id
+INSTAGRAM_CLIENT_SECRET=your_instagram_client_secret
 INSTAGRAM_REDIRECT_URI=https://makeadv.onrender.com/auth/instagram/callback
 APP_FRONTEND_URL=https://makeadv.vercel.app
 ALLOWED_ORIGINS=https://makeadv.vercel.app
 APP_PUBLIC_BACKEND_URL=https://makeadv.onrender.com
 SPRING_PROFILES_ACTIVE=prod
 JPA_SHOW_SQL=false
+JPA_DDL_AUTO=validate
 ```
 
 Update `APP_FRONTEND_URL` and `ALLOWED_ORIGINS` once you know your final Vercel domain.

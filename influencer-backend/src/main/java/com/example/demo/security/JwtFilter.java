@@ -23,10 +23,15 @@ public class JwtFilter implements Filter {
             "http://127.0.0.1:3000"
     );
 
-    /** Paths that do not require a JWT. */
+    /** Exact paths that do not require a JWT. */
     private static final Set<String> PUBLIC_PATHS = Set.of(
             "/auth/login",
             "/auth/register"
+    );
+
+    /** Prefix paths that should bypass JWT checks (e.g. SockJS handshake endpoints). */
+    private static final Set<String> PUBLIC_PREFIX_PATHS = Set.of(
+            "/ws-chat"
     );
 
     @Override
@@ -46,7 +51,7 @@ public class JwtFilter implements Filter {
         String path = resolvedPath(req);
 
         // Skip JWT check for whitelisted public paths
-        if (PUBLIC_PATHS.contains(path)) {
+        if (isPublicPath(path)) {
             chain.doFilter(request, response);
             return;
         }
@@ -86,6 +91,18 @@ public class JwtFilter implements Filter {
             }
         }
         return path;
+    }
+
+    private boolean isPublicPath(String path) {
+        if (PUBLIC_PATHS.contains(path)) {
+            return true;
+        }
+        for (String prefix : PUBLIC_PREFIX_PATHS) {
+            if (path.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addCorsHeaders(HttpServletRequest req, HttpServletResponse res) {

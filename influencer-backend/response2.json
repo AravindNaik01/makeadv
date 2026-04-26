@@ -1,0 +1,79 @@
+﻿{
+    "status":  "ok",
+    "data":  {
+                 "user":  {
+                              "friendship_status":  null,
+                              "gating":  null,
+                              "is_checkpoint_memorialized":  null,
+                              "is_private":  false,
+                              "has_story_archive":  null,
+                              "supervision_info":  null,
+                              "is_regulated_c18":  false,
+                              "regulated_news_in_locations":  [
+
+                                                              ],
+                              "bio_links":  [
+
+                                            ],
+                              "text_post_app_badge_label":  null,
+                              "show_text_post_app_badge":  false,
+                              "username":  "virat.kohli",
+                              "text_post_new_post_count":  null,
+                              "pk":  "2094200507",
+                              "live_broadcast_visibility":  null,
+                              "live_broadcast_id":  null,
+                              "profile_pic_url":  "https://scontent-fra3-2.cdninstagram.com/v/t51.2885-19/331017149_3373809859551320_1963035851400324431_n.jpg?stp=dst-jpg_e0_s150x150_tt6\u0026efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0\u0026_nc_ht=scontent-fra3-2.cdninstagram.com\u0026_nc_cat=1\u0026_nc_oc=Q6cZ2gH-Y3RJuFUV88K1zi7zmjUM-eSLIDveaZ-JjfoE5WvYvS0wp1Fu9wRUhBs0xu4z7F8\u0026_nc_ohc=R8BsId_fZjYQ7kNvwEPquyQ\u0026_nc_gid=qWpuDOnJ-w1YE7athPd-Fw\u0026edm=ALGbJPMBAAAA\u0026ccb=7-5\u0026oh=00_Af32-TPJeaPeUpplAZq_YbBiifMu3sgqMSwxiStAD5Ovyg\u0026oe=69F2C916\u0026_nc_sid=7d3ac5",
+                              "hd_profile_pic_url_info":  {
+                                                              "url":  "https://scontent-fra3-2.cdninstagram.com/v/t51.2885-19/331017149_3373809859551320_1963035851400324431_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0\u0026_nc_ht=scontent-fra3-2.cdninstagram.com\u0026_nc_cat=1\u0026_nc_oc=Q6cZ2gH-Y3RJuFUV88K1zi7zmjUM-eSLIDveaZ-JjfoE5WvYvS0wp1Fu9wRUhBs0xu4z7F8\u0026_nc_ohc=R8BsId_fZjYQ7kNvwEPquyQ\u0026_nc_gid=qWpuDOnJ-w1YE7athPd-Fw\u0026edm=ALGbJPMBAAAA\u0026ccb=7-5\u0026oh=00_Af3xvzDpxSPyx-OiidVlkSN8QIwp6EAc6yqZ-uoAzwEDMg\u0026oe=69F2C916\u0026_nc_sid=7d3ac5"
+                                                          },
+                              "is_unpublished":  false,
+                              "latest_reel_media":  null,
+                              "has_profile_pic":  null,
+                              "account_type":  3,
+                              "follower_count":  276387338,
+                              "is_verified":  true,
+                              "mutual_followers_count":  null,
+                              "profile_context_links_with_user_ids":  null,
+                              "address_street":  null,
+                              "city_name":  null,
+                              "is_business":  false,
+                              "zip":  null,
+                              "biography_with_entities":  {
+                                                              "entities":  [
+
+                                                                           ]
+                                                          },
+                              "category":  "",
+                              "should_show_category":  false,
+                              "full_name":  "Virat Kohli",
+                              "account_badges":  [
+
+                                                 ],
+                              "ai_agent_type":  null,
+                              "fb_profile_bio_link_web":  null,
+                              "external_lynx_url":  null,
+                              "external_url":  "",
+                              "pronouns":  [
+
+                                           ],
+                              "biography":  "Carpediem!",
+                              "transparency_label":  null,
+                              "transparency_product":  null,
+                              "has_chaining":  null,
+                              "remove_message_entrypoint":  null,
+                              "fbid_v2":  "17841401935231775",
+                              "interop_messaging_user_fbid":  "114655466585200",
+                              "show_account_transparency_details":  true,
+                              "is_embeds_disabled":  false,
+                              "is_professional_account":  null,
+                              "following_count":  278,
+                              "media_count":  1049,
+                              "total_clips_count":  1,
+                              "latest_besties_reel_media":  null,
+                              "reel_media_seen_timestamp":  null,
+                              "id":  "2094200507",
+                              "link":  "https://www.instagram.com/virat.kohli"
+                          }
+             },
+    "request_id":  "3f089f10-6ed2-4c6c-af79-31db379a2bb4"
+}

@@ -23,8 +23,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> {})
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login", "/auth/register").permitAll()
-                .anyRequest().permitAll()
+                .requestMatchers("/auth/**", "/ws-chat/**").permitAll()
+                .anyRequest().authenticated()
             );
         return http.build();
     }

@@ -18,6 +18,9 @@ public class Influencer {
     @Column(unique = true)
     private String username;
 
+    private String instagramUrl;
+    private boolean instagramVerified;
+
     private String category;
     private String location;
     private int trustScore;
@@ -37,6 +40,12 @@ public class Influencer {
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+
+    public String getInstagramUrl() { return instagramUrl; }
+    public void setInstagramUrl(String instagramUrl) { this.instagramUrl = instagramUrl; }
+
+    public boolean isInstagramVerified() { return instagramVerified; }
+    public void setInstagramVerified(boolean instagramVerified) { this.instagramVerified = instagramVerified; }
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
