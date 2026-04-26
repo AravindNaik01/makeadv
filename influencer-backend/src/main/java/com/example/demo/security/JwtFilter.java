@@ -30,7 +30,8 @@ public class JwtFilter implements Filter {
 
     /** Prefix paths that should bypass JWT checks (e.g. SockJS handshake endpoints). */
     private static final Set<String> PUBLIC_PREFIX_PATHS = Set.of(
-            "/ws-chat"
+            "/ws-chat",
+            "/chat/files"
     );
 
     @Override

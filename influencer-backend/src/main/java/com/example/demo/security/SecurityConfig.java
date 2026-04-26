@@ -26,7 +26,7 @@ public class SecurityConfig {
             .cors(cors -> {})
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**", "/ws-chat/**", "/error").permitAll()
+                .requestMatchers("/auth/**", "/ws-chat/**", "/chat/files/**", "/error").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
