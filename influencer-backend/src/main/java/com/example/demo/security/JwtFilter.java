@@ -2,7 +2,6 @@ package com.example.demo.security;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Set;
@@ -15,7 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
  * Public paths (login and register) pass through without a token.
  * CORS headers are added here for error responses that bypass Spring's CORS config.
  */
-@Component
 public class JwtFilter implements Filter {
 
     private static final Set<String> ALLOWED_ORIGINS = Set.of(
@@ -26,7 +24,8 @@ public class JwtFilter implements Filter {
     /** Exact paths that do not require a JWT. */
     private static final Set<String> PUBLIC_PATHS = Set.of(
             "/auth/login",
-            "/auth/register"
+            "/auth/register",
+            "/error"
     );
 
     /** Prefix paths that should bypass JWT checks (e.g. SockJS handshake endpoints). */
