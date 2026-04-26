@@ -392,13 +392,33 @@ body {
   color: var(--teal)
 }
 
+.nav-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--text);
+}
+
 .home-footer {
   text-align: center;
   color: var(--muted);
-  font-size: .8rem;
-  padding: 20px;
+  font-size: .85rem;
+  padding: 60px 40px 20px;
   position: relative;
-  z-index: 5
+  z-index: 5;
+  background: rgba(14, 14, 28, .5);
+  border-top: 1px solid var(--border);
+}
+
+@media(max-width: 768px) {
+  .home-nav-links {
+    display: none !important;
+  }
 }
 
 /* ── AUTH ── */

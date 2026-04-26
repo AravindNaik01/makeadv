@@ -62,6 +62,11 @@ function HomePage() {
         <div className="home-nav-logo">
           <span className="logo-icon">⚡</span> MakeAdv
         </div>
+        <div className="home-nav-links" style={{ display: "flex", gap: "24px", alignItems: "center" }}>
+          <a href="#features" className="nav-link">Features</a>
+          <a href="#how-it-works" className="nav-link">How it Works</a>
+          <a href="#pricing" className="nav-link">Pricing</a>
+        </div>
         <div className="home-nav-actions">
           <button className="btn-ghost" onClick={() => navigate("/login")}>Login</button>
           <button className="btn-primary" onClick={() => navigate("/register")}>Get Started</button>
@@ -95,7 +100,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="role-section">
+      <section id="features" className="role-section">
         <div className="role-card" onClick={() => navigate("/register?role=BUSINESS")}>
           <div className="role-card-icon">🏢</div>
           <h3>For Businesses</h3>
@@ -110,7 +115,34 @@ function HomePage() {
         </div>
       </section>
 
-      <footer className="home-footer">© 2025 MakeAdv · Built with ❤️</footer>
+      <footer className="home-footer">
+        <div className="footer-content" style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "40px", maxWidth: "1000px", margin: "0 auto", paddingBottom: "40px", textAlign: "left" }}>
+          <div className="footer-col">
+            <div className="home-nav-logo" style={{ marginBottom: "16px" }}><span className="logo-icon">⚡</span> MakeAdv</div>
+            <p style={{ maxWidth: "250px", lineHeight: "1.6" }}>The premier platform connecting authentic creators with top-tier brands.</p>
+          </div>
+          <div className="footer-col" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <strong style={{ color: "#fff", marginBottom: "8px" }}>Platform</strong>
+            <a href="#features" className="nav-link">Features</a>
+            <a href="#pricing" className="nav-link">Pricing</a>
+            <a href="/login" className="nav-link">Login</a>
+          </div>
+          <div className="footer-col" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <strong style={{ color: "#fff", marginBottom: "8px" }}>Company</strong>
+            <a href="#about" className="nav-link">About Us</a>
+            <a href="#contact" className="nav-link">Contact</a>
+            <a href="#blog" className="nav-link">Blog</a>
+          </div>
+          <div className="footer-col" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <strong style={{ color: "#fff", marginBottom: "8px" }}>Legal</strong>
+            <a href="#privacy" className="nav-link">Privacy Policy</a>
+            <a href="#terms" className="nav-link">Terms of Service</a>
+          </div>
+        </div>
+        <div style={{ borderTop: "1px solid var(--border)", paddingTop: "20px" }}>
+          © 2026 MakeAdv · Built with ❤️
+        </div>
+      </footer>
     </div>
   );
 }
