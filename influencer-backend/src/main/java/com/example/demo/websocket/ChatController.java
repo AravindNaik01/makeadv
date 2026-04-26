@@ -93,6 +93,7 @@ public class ChatController {
         response.setFileUrl(saved.getFileUrl());
         response.setFileSize(saved.getFileSize());
         response.setMimeType(saved.getMimeType());
+        response.setSentAt(saved.getSentAt());
 
         // Deliver to both the sender and recipient via their private queues
         String topic = "/topic/chat/" + saved.getConnectionId();

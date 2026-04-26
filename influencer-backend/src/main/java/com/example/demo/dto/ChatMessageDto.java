@@ -14,6 +14,7 @@ public class ChatMessageDto {
     private String fileUrl;
     private Long fileSize;
     private String mimeType;
+    private java.time.LocalDateTime sentAt;
 
     // ── Getters & Setters ──────────────────────────────────────────────────────
 
@@ -43,4 +44,7 @@ public class ChatMessageDto {
 
     public String getMimeType() { return mimeType; }
     public void setMimeType(String mimeType) { this.mimeType = mimeType; }
+
+    public java.time.LocalDateTime getSentAt() { return sentAt; }
+    public void setSentAt(java.time.LocalDateTime sentAt) { this.sentAt = sentAt; }
 }
