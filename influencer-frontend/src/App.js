@@ -1416,8 +1416,11 @@ function InfluencerDash({ authed, onLogout, token, myUsername }) {
                       Instagram Username
                       {profile.instagramVerified && <span style={{ color: "var(--success)", fontSize: "0.85em", marginLeft: "8px" }}>✅ Verified Sync</span>}
                     </label>
-                    <input type="text" value={profile.instagramUrl} onChange={e => setProfile({ ...profile, instagramUrl: e.target.value })} placeholder="e.g. virat.kohli" />
-                    <small style={{ color: "var(--text-dim)", marginTop: "4px", display: "block" }}>Enter your username to automatically sync your true follower count.</small>
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <input type="text" value={profile.instagramUrl} onChange={e => setProfile({ ...profile, instagramUrl: e.target.value })} placeholder="e.g. virat.kohli" style={{ flex: 1 }} />
+                      <button type="submit" className="btn-primary" style={{ padding: "0 20px" }}>Fetch & Save</button>
+                    </div>
+                    <small style={{ color: "var(--text-dim)", marginTop: "4px", display: "block" }}>Enter your username and click Fetch & Save to automatically sync your true follower count.</small>
                   </div>
                   <div className="field"><label>Name</label><input type="text" value={profile.name} onChange={e => setProfile({ ...profile, name: e.target.value })} /></div>
                   <div className="field"><label>Category</label><input type="text" value={profile.category} onChange={e => setProfile({ ...profile, category: e.target.value })} /></div>
